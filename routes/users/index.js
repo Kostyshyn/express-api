@@ -24,7 +24,10 @@ router.get('/get/:username', function(req, res, next) {
 
 	var username = req.params.username;
 
+	console.log(username)
+
 	User.readUser({ username: username }).then(function(user){
+		console.log(2, user);
 		if (user){
 			res.status(200);
 			res.json({ user: user });
