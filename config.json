@@ -1,4 +1,11 @@
 {
 	"dbUrl": "mongodb://localhost/SPA_blog_v2",
-	"port": "8888"
+	"port": "8888",
+	"private": {
+		"access": {
+			"admin": 2,
+			"moderator": 1,
+			"user": 0
+		}
+	}
 }
