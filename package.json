@@ -8,6 +8,7 @@
   "main": "./bin/www",
   "dependencies": {
     "body-parser": "~1.18.2",
+    "colors": "^1.1.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
@@ -15,5 +16,20 @@
     "mongoose": "^5.0.2",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5"
+  },
+  "keywords": [
+    "express",
+    "vue",
+    "mongodb",
+    "rest",
+    "api",
+    "spa",
+    "blog",
+    "socketio"
+  ],
+  "author": "kostyshyn@ua.fm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kostyshyn/express-api.git"
   }
 }
