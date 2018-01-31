@@ -20,14 +20,11 @@ router.post('/register', function(req, res, next) {
 	});
 });
 
-router.get('/get/:username', function(req, res, next) {
+router.get('/get/:href', function(req, res, next) {
 
-	var username = req.params.username;
+	var query = { href: req.params.href };
 
-	console.log(username)
-
-	User.readUser({ username: username }).then(function(user){
-		console.log(2, user);
+	User.readUser(query).then(function(user){
 		if (user){
 			res.status(200);
 			res.json({ user: user });

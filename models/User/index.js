@@ -79,12 +79,10 @@ module.exports.createUser = function(user){
 module.exports.readUser = function(query){
 	var query = query;
 	return new Promise(function(resolve, reject){
-		console.log('model', query)
-		User.findOne(query, function(err, user){
+		User.findOne(query, {}, function(err, user){
 			if (err){
 				reject(err);
 			} else {
-				console.log('resolve', user);
 				resolve(user);
 			}
 		});	
