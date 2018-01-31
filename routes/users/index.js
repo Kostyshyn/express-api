@@ -10,7 +10,7 @@ router.post('/register', function(req, res, next) {
 		password: req.body.password
 	};
 
-	console.log('user', user, req.body);
+	// console.log('user', user, req.body);
 
 	User.createUser(user).then(function(user){
 		res.status(200);
@@ -18,6 +18,25 @@ router.post('/register', function(req, res, next) {
 	}).catch(function(err){
 		next(err);
 	});
+});
+
+router.get('/get/all', function(req, res, next) {
+
+	User.allUsers().then(function(users){
+		if (users){
+			res.status(200);
+			res.json({ users: users });
+		} else {
+			res.status(404);
+			res.json({
+				user: null,
+				message: 'Users not found'
+			});
+		}
+	}).catch(function(err){
+		next(err);
+	});
+
 });
 
 router.get('/get/:href', function(req, res, next) {

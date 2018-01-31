@@ -76,14 +76,30 @@ module.exports.createUser = function(user){
 	});
 };
 
-module.exports.readUser = function(query){
+module.exports.readUser = function(query, fields){
 	var query = query;
+	var fields = fields || {};
 	return new Promise(function(resolve, reject){
-		User.findOne(query, {}, function(err, user){
+		User.findOne(query, fields , function(err, user){
 			if (err){
 				reject(err);
 			} else {
 				resolve(user);
+			}
+		});	
+	});
+};
+
+module.exports.allUsers = function(query, fields, options){
+	var query = query || null;
+	var fields = fields || {};
+	var options = options || {};
+	return new Promise(function(resolve, reject){
+		User.find(query, fields, options, function(err, users){
+			if (err){
+				reject(err);
+			} else {
+				resolve(users);
 			}
 		});	
 	});
