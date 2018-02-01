@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var userRouter = require('./api/users');
+var userRouter = require('./users');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

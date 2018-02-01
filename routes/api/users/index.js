@@ -1,26 +1,34 @@
 var express = require('express');
 var router = express.Router();
 
-var User =  require('../../models/User');
+var User =  require('../../../models/User');
 
 router.post('/register', function(req, res, next) {
 
 	var user = {
-		username: req.body.username,
-		password: req.body.password
+		username: req.body.credentials.username,
+		password: req.body.credentials.password
 	};
-
-	// console.log('user', user, req.body);
 
 	User.createUser(user).then(function(user){
 		res.status(200);
 		res.json({ user: user });
 	}).catch(function(err){
-		next(err);
+		if (err.name == 'ValidationError' ){
+			res.status(400);
+			res.json({ error: {
+					name: 'ValidationError',
+					message: 'User validation failed',
+					error: err.errors
+				} 
+			});		
+		} else {
+			next(err);			
+		}
 	});
 });
 
-router.get('/get/all', function(req, res, next) {
+router.get('/', function(req, res, next) {
 
 	User.allUsers().then(function(users){
 		if (users){
@@ -39,7 +47,7 @@ router.get('/get/all', function(req, res, next) {
 
 });
 
-router.get('/get/:href', function(req, res, next) {
+router.get('/:href', function(req, res, next) {
 
 	var query = { href: req.params.href };
 
