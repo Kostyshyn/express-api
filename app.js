@@ -35,7 +35,6 @@ db.once('connected', function(){
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(validator());
 // app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -54,13 +53,19 @@ app.use(function(err, req, res, next) {
   	// set locals, only providing error in development
   	res.locals.message = err.message;
   	res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  	// render the error page
-  	res.status(err.status || 500);
-    // console.log(err);
-  	res.json({
-  		error: err
-  	});
+    if (err.isBoom) {
+      return res.status(err.output.statusCode).json({
+        error: err.data // err.output.payload
+      });
+    } else {
+      // render the error page
+      res.status(err.status || 500);
+      // console.log(err);
+      res.json({
+        error: err
+      });
+    }
+  	
 });
 
 module.exports = app;

@@ -6,6 +6,7 @@
 			"admin": 2,
 			"moderator": 1,
 			"user": 0
-		}
+		},
+		"secretAuthKey": "secret"
 	}
 }

@@ -14,11 +14,11 @@ var userSchema = mongoose.Schema({
 		required: true,
 		unique: true
 	},
-	// email: {
-	// 	type: String,
-	// 	required: true,
-	// 	unique: true
-	// },
+	email: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	password: {
 		type: String,
 		required: true
@@ -59,15 +59,15 @@ var userSchema = mongoose.Schema({
 });
 
 userSchema.pre('save', function(next){
-	this.href = this.username.toLowerCase();
+	this.href = this.username.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}|=\-_`~()]/g,"");
 	var user = this;
 	if (user.isModified('password')){
 
 		var hash = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
 		user.password = hash;
-		return next(user);
+		next(null, user);
 		
-	}
+	} 
 	return next();
 });
 
