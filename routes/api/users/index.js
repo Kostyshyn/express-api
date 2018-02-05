@@ -4,15 +4,14 @@ var expressJoi = require('express-joi-validator');
 var validator = require('../../../controllers/validators');
 
 // 
-var userController = require('../../../controllers/auth');
+// var userController = require('../../../controllers/user');
 // 
 
 var User =  require('../../../models/User');
 
-router.post('/register', expressJoi(validator.register), userController.register);
-
-
 router.get('/', function(req, res, next) {
+
+	// console.log(req.user);
 
 	User.allUsers().then(function(users){
 		if (users){

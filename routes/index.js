@@ -2,17 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var userRouter = require('./api/users');
+var authRouter = require('./api/auth');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+var authController = require('../controllers/auth');
 
-router.get('/api', function(req, res, next) {
-  res.json({ title: 'Hello from REST API' });
-});
-
-router.use('/users', userRouter);
+router.use('/', authRouter);
+router.use('/users', authController.protected, userRouter);
 
 
 
