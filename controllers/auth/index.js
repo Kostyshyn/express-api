@@ -32,10 +32,19 @@ module.exports.register = function(req, res, next){
 					expiresIn: 86400 // 24 hours
 				});
 
+				var responseUser = {
+					username: user.username,
+					href: user.href,
+					online: user.online,
+					info: user.info,
+					profile_img: user.profile_img,
+					role: user.role
+				};
+
 				res.status(200);
 				res.json({
 					status: 200, 
-					user: user,
+					user: responseUser,
 					token: token
 				});
 			}).catch(function(err){
@@ -80,10 +89,19 @@ module.exports.login = function(req, res, next){
 				expiresIn: 86400 // 24 hours
 			});
 
+			var responseUser = {
+				username: user.username,
+				href: user.href,
+				online: user.online,
+				info: user.info,
+				profile_img: user.profile_img,
+				role: user.role
+			};
+
 			res.status(200);
 			res.json({
 				status: 200, 
-				user: user,
+				user: responseUser,
 				token: token
 			});			
 		}
