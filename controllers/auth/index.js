@@ -38,7 +38,8 @@ module.exports.register = function(req, res, next){
 					online: user.online,
 					info: user.info,
 					profile_img: user.profile_img,
-					role: user.role
+					role: user.role,
+					id: user._id
 				};
 
 				res.status(200);
@@ -95,7 +96,8 @@ module.exports.login = function(req, res, next){
 				online: user.online,
 				info: user.info,
 				profile_img: user.profile_img,
-				role: user.role
+				role: user.role,
+				id: user._id
 			};
 
 			res.status(200);
@@ -113,14 +115,14 @@ module.exports.protected = function(req, res, next) {
 
   	if (token) {
 
-    	jwt.verify(token, config.private.secretAuthKey, function(err, decoded) {      
+    	jwt.verify(token, config.private.secretAuthKey, function(err, decoded){      
       		if (err) {
-        	return res.json({ success: false, message: 'Failed to authenticate token.' });    
-      	} else {
-       		// if everything is good, save to request for use in other routes
-        	req.decoded = decoded;    
-        	next();
-      	}
+	        	return res.json({ success: false, message: 'Failed to authenticate token.' });    
+	      	} else {
+	       		// if everything is good, save to request for use in other routes
+	        	req.decoded = decoded;    
+	        	next();
+	      	}
     	});
 
   	} else {
