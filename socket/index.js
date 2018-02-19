@@ -3,25 +3,70 @@ var jwt = require('jsonwebtoken');
 var config = require('../config');
 var User = require('../models/User');
 
-module.exports = function(io, handler){
-	// io.use(socketioJwt.authorize({
-	// 	secret: config.private.secretAuthKey,
-	//   	handshake: true
-	// }));
+var Events = require('../events');
 
-	// io.on('connection', function (socket) {
-	//   	console.log('hello! ', socket.decoded_token.name);
-	// });
+// Events.emit('s', 'bar')
+
+module.exports = function(io, handler){
+
+	var authenticatedUsers = {};
 
 	io.sockets.on('connection', socketioJwt.authorize({
 	    secret: config.private.secretAuthKey,
 	    timeout: 15000 // 15 seconds to send the authentication message 
 	})).on('authenticated', function(socket) {
 	    //this socket is authenticated, we are good to handle more events from it. 
-	    console.log('hello! ' + socket.decoded_token.id);
+	    // console.log('hello! ' + socket.decoded_token.id);
+
+	    var client = socket.decoded_token.id;
+
+	    if (authenticatedUsers[client]){
+	    	authenticatedUsers[client].push(socket);
+	    } else {
+	    	authenticatedUsers[client] = [];
+	    	authenticatedUsers[client].push(socket);
+	    }
+
+	    for (key in authenticatedUsers){
+	    	if (authenticatedUsers[key].length == 0){
+	    		delete authenticatedUsers[key];
+	    	}
+	    }
+
+	    // for (key in authenticatedUsers){
+	    // 	console.log(authenticatedUsers[key].length);
+	    // }
+
+	    socket.on('cl', function(msg){
+	    	console.log(msg);
+
+	    	authenticatedUsers[client].forEach(function(soc){
+	    		soc.emit('custom', msg); // for all user sockets
+
+	    	});
+
+	    });
+
+	    socket.on('logout', function(){
+	    	authenticatedUsers[client].some(function(item, i){
+	    		if (authenticatedUsers[client][i].id == socket.id){
+	    			authenticatedUsers[client].splice(i, 1);
+	    		}
+	    	});
+	    });
+	    socket.on('disconnect', function(){
+	    	authenticatedUsers[client].some(function(item, i){
+	    		if (authenticatedUsers[client][i].id == socket.id){
+	    			authenticatedUsers[client].splice(i, 1);
+	    		}
+	    	});
+	    });
+
 	});
 
-	// var authenticatedUsers = {};
+	// io.emit('custon', 'hello from server');
+
+
 
 	// io.sockets.on('connection', function (socket) {
 	//     // console.log(socket.decoded_token.id, 'connected');
