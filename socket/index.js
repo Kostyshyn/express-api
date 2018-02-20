@@ -18,7 +18,7 @@ module.exports = function(io, handler){
 	    //this socket is authenticated, we are good to handle more events from it. 
 	    // console.log('hello! ' + socket.decoded_token.id);
 
-	    var client = socket.decoded_token.id;
+	    var client = socket.decoded_token.id; // user id for database
 
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
