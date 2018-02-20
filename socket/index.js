@@ -27,14 +27,10 @@ module.exports = function(io, handler){
 	    	authenticatedUsers[client].push(socket);
 	    }
 
-	    for (key in authenticatedUsers){
-	    	if (authenticatedUsers[key].length == 0){
-	    		delete authenticatedUsers[key];
-	    	}
-	    }
-
 	    // for (key in authenticatedUsers){
-	    // 	console.log(authenticatedUsers[key].length);
+	    // 	if (authenticatedUsers[key].length == 0){
+	    // 		delete authenticatedUsers[key];
+	    // 	}
 	    // }
 
 	    socket.on('cl', function(msg){
@@ -61,6 +57,16 @@ module.exports = function(io, handler){
 	    		}
 	    	});
 	    });
+
+	    for (key in authenticatedUsers){
+	    	if (authenticatedUsers[key].length == 0){
+	    		delete authenticatedUsers[key];
+	    	}
+	    }
+
+	   	for (key in authenticatedUsers){
+	    	console.log(key, authenticatedUsers[key].length);
+	    }
 
 	});
 
