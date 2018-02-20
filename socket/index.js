@@ -17,7 +17,10 @@ module.exports = function(io, handler){
 	})).on('authenticated', function(socket) {
 	    //this socket is authenticated, we are good to handle more events from it. 
 	    // console.log('hello! ' + socket.decoded_token.id);
-
+	    // console.log(io.sockets.connected);
+	    for (var s in io.sockets.connected){
+	    	console.log('connected', s)
+	    }
 	    var client = socket.decoded_token.id;
 
 	    if (authenticatedUsers[client]){
@@ -27,11 +30,16 @@ module.exports = function(io, handler){
 	    	authenticatedUsers[client].push(socket);
 	    }
 
-	    // for (key in authenticatedUsers){
-	    // 	if (authenticatedUsers[key].length == 0){
-	    // 		delete authenticatedUsers[key];
-	    // 	}
-	    // }
+	    for (key in authenticatedUsers){
+	    	if (authenticatedUsers[key].length == 0){
+	    		delete authenticatedUsers[key];
+	    	}
+	    }
+
+	   	for (key in authenticatedUsers){
+	    	console.log(key, authenticatedUsers[key].length);
+	    	console.log('----------------------');
+	    }
 
 	    socket.on('cl', function(msg){
 	    	console.log(msg);
@@ -43,30 +51,14 @@ module.exports = function(io, handler){
 
 	    });
 
-	    socket.on('logout', function(){
-	    	authenticatedUsers[client].some(function(item, i){
-	    		if (authenticatedUsers[client][i].id == socket.id){
-	    			authenticatedUsers[client].splice(i, 1);
-	    		}
-	    	});
-	    });
 	    socket.on('disconnect', function(){
 	    	authenticatedUsers[client].some(function(item, i){
 	    		if (authenticatedUsers[client][i].id == socket.id){
 	    			authenticatedUsers[client].splice(i, 1);
 	    		}
 	    	});
+	    	console.log('dis');
 	    });
-
-	    for (key in authenticatedUsers){
-	    	if (authenticatedUsers[key].length == 0){
-	    		delete authenticatedUsers[key];
-	    	}
-	    }
-
-	   	for (key in authenticatedUsers){
-	    	console.log(key, authenticatedUsers[key].length);
-	    }
 
 	});
 
