@@ -5,8 +5,6 @@ var User = require('../models/User');
 
 var Events = require('../events');
 
-// Events.emit('s', 'bar')
-
 module.exports = function(io, handler){
 
 	var authenticatedUsers = {};
@@ -20,6 +18,8 @@ module.exports = function(io, handler){
 
 	    var client = socket.decoded_token.id; // user id for database
 
+	    console.log('user', client, 'enter')
+
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
 	    } else {
@@ -27,38 +27,7 @@ module.exports = function(io, handler){
 	    	authenticatedUsers[client].push(socket);
 	    }
 
-	    // for (key in authenticatedUsers){
-	    // 	if (authenticatedUsers[key].length == 0){
-	    // 		delete authenticatedUsers[key];
-	    // 	}
-	    // }
-
-	    socket.on('cl', function(msg){
-	    	console.log(msg);
-
-	    	authenticatedUsers[client].forEach(function(soc){
-	    		soc.emit('custom', msg); // for all user sockets
-
-	    	});
-
-	    });
-
-	    socket.on('logout', function(){
-	    	authenticatedUsers[client].some(function(item, i){
-	    		if (authenticatedUsers[client][i].id == socket.id){
-	    			authenticatedUsers[client].splice(i, 1);
-	    		}
-	    	});
-	    });
-	    socket.on('disconnect', function(){
-	    	authenticatedUsers[client].some(function(item, i){
-	    		if (authenticatedUsers[client][i].id == socket.id){
-	    			authenticatedUsers[client].splice(i, 1);
-	    		}
-	    	});
-	    });
-
-	    for (key in authenticatedUsers){
+	   	for (key in authenticatedUsers){
 	    	if (authenticatedUsers[key].length == 0){
 	    		delete authenticatedUsers[key];
 	    	}
@@ -67,6 +36,33 @@ module.exports = function(io, handler){
 	   	for (key in authenticatedUsers){
 	    	console.log(key, authenticatedUsers[key].length);
 	    }
+	    console.log('--------------------')
+
+	    // Events.emit('online.users', authenticatedUsers);
+
+	    // for (key in authenticatedUsers){
+	    // 	if (authenticatedUsers[key].length == 0){
+	    // 		delete authenticatedUsers[key];
+	    // 	}
+	    // }
+
+	    socket.on('send.message', function(msg){
+	    	console.log(msg);
+
+	    	authenticatedUsers[client].forEach(function(soc){
+	    		soc.emit('message', msg); // for all user sockets
+
+	    	});
+
+	    });
+	    socket.on('disconnect', function(){  // trouble in disconnect
+	    	authenticatedUsers[client].some(function(item, i){
+	    		if (authenticatedUsers[client][i].id == socket.id){
+	    			authenticatedUsers[client].splice(i, 1);
+	    		}
+	    	});
+	    	console.log('dis')
+	    });
 
 	});
 

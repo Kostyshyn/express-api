@@ -3,9 +3,9 @@ var Events = new EventEmitter();
 
 module.exports = Events;
 
-Events.on('s', function(r){
-	console.log(r)
-})
+// Events.on('online.users', function(users){
+	
+// })
 
 
 
