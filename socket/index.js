@@ -18,7 +18,10 @@ module.exports = function(io, handler){
 
 	    var client = socket.decoded_token.id; // user id for database
 
-	    console.log('user', client, 'enter')
+	    console.log('user', client, 'enter');
+	    for (i in io.sockets.connected){
+			console.log('connected', i);
+	    }
 
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
