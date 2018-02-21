@@ -5,8 +5,6 @@ var User = require('../models/User');
 
 var Events = require('../events');
 
-// Events.emit('s', 'bar')
-
 module.exports = function(io, handler){
 
 	var authenticatedUsers = {};
@@ -17,11 +15,13 @@ module.exports = function(io, handler){
 	})).on('authenticated', function(socket) {
 	    //this socket is authenticated, we are good to handle more events from it. 
 	    // console.log('hello! ' + socket.decoded_token.id);
-	    // console.log(io.sockets.connected);
-	    for (var s in io.sockets.connected){
-	    	console.log('connected', s)
+
+	    var client = socket.decoded_token.id; // user id for database
+
+	    console.log('user', client, 'enter');
+	    for (i in io.sockets.connected){
+			console.log('connected', i);
 	    }
-	    var client = socket.decoded_token.id;
 
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
@@ -30,7 +30,7 @@ module.exports = function(io, handler){
 	    	authenticatedUsers[client].push(socket);
 	    }
 
-	    for (key in authenticatedUsers){
+	   	for (key in authenticatedUsers){
 	    	if (authenticatedUsers[key].length == 0){
 	    		delete authenticatedUsers[key];
 	    	}
@@ -38,26 +38,25 @@ module.exports = function(io, handler){
 
 	   	for (key in authenticatedUsers){
 	    	console.log(key, authenticatedUsers[key].length);
-	    	console.log('----------------------');
 	    }
+	    console.log('--------------------');
 
-	    socket.on('cl', function(msg){
+	    socket.on('send.message', function(msg){
 	    	console.log(msg);
 
 	    	authenticatedUsers[client].forEach(function(soc){
-	    		soc.emit('custom', msg); // for all user sockets
+	    		soc.emit('message', msg); // for all user sockets
 
 	    	});
 
 	    });
-
-	    socket.on('disconnect', function(){
+	    socket.on('disconnect', function(){  // trouble in disconnect
 	    	authenticatedUsers[client].some(function(item, i){
 	    		if (authenticatedUsers[client][i].id == socket.id){
 	    			authenticatedUsers[client].splice(i, 1);
 	    		}
 	    	});
-	    	console.log('dis');
+	    	console.log('dis')
 	    });
 
 	});
