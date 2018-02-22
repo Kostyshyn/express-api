@@ -18,11 +18,6 @@ module.exports = function(io, handler){
 
 	    var client = socket.decoded_token.id; // user id for database
 
-	    console.log('user', client, 'enter');
-	    for (i in io.sockets.connected){
-			console.log('connected', i);
-	    }
-
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
 	    } else {
@@ -35,11 +30,6 @@ module.exports = function(io, handler){
 	    		delete authenticatedUsers[key];
 	    	}
 	    }
-
-	   	for (key in authenticatedUsers){
-	    	console.log(key, authenticatedUsers[key].length);
-	    }
-	    console.log('--------------------')
 
 	    // Events.emit('online.users', authenticatedUsers);
 
@@ -64,7 +54,6 @@ module.exports = function(io, handler){
 	    			authenticatedUsers[client].splice(i, 1);
 	    		}
 	    	});
-	    	console.log('dis')
 	    });
 
 	});
