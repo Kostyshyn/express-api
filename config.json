@@ -8,5 +8,20 @@
 			"user": 0
 		},
 		"secretAuthKey": "secret"
+	},
+	"errorMessages": {
+		"authentication": {
+			"login": {
+				"userNotFound": "Такого користувача не знайдено",
+				"invalidPassword": "Неправильний пароль"
+			},
+			"register": {
+				"alreadyExists": "Користувач з таким ім'ям або адресою вже існує"
+			},
+			"protected": {
+				"tokenVerificationFailed": "Неправильний токен",
+				"noTken": "Немає токена"
+			}
+		}
 	}
 }
