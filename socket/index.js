@@ -9,6 +9,14 @@ module.exports = function(io, handler){
 
 	var authenticatedUsers = {};
 
+	Events.on('notification', function(note){
+	    console.log(note.message);
+	    console.log('======')
+	    authenticatedUsers[note.to].forEach(function(soc){
+	    	soc.emit('notification', note.message);
+	    });
+	});
+
 	io.sockets.on('connection', socketioJwt.authorize({
 	    secret: config.private.secretAuthKey,
 	    timeout: 15000 // 15 seconds to send the authentication message 
@@ -31,7 +39,6 @@ module.exports = function(io, handler){
 	    	}
 	    }
 
-	    // Events.emit('online.users', authenticatedUsers);
 
 	    // for (key in authenticatedUsers){
 	    // 	if (authenticatedUsers[key].length == 0){
