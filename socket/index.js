@@ -9,6 +9,14 @@ module.exports = function(io, handler){
 
 	var authenticatedUsers = {};
 
+	Events.on('notification', function(note){
+	    console.log(note.message);
+	    console.log('======')
+	    authenticatedUsers[note.to].forEach(function(soc){
+	    	soc.emit('notification', note.message);
+	    });
+	});
+
 	io.sockets.on('connection', socketioJwt.authorize({
 	    secret: config.private.secretAuthKey,
 	    timeout: 15000 // 15 seconds to send the authentication message 
@@ -17,11 +25,6 @@ module.exports = function(io, handler){
 	    // console.log('hello! ' + socket.decoded_token.id);
 
 	    var client = socket.decoded_token.id; // user id for database
-
-	    console.log('user', client, 'enter');
-	    for (i in io.sockets.connected){
-			console.log('connected', i);
-	    }
 
 	    if (authenticatedUsers[client]){
 	    	authenticatedUsers[client].push(socket);
@@ -36,10 +39,19 @@ module.exports = function(io, handler){
 	    	}
 	    }
 
+<<<<<<< HEAD
 	   	for (key in authenticatedUsers){
 	    	console.log(key, authenticatedUsers[key].length);
 	    }
 	    console.log('--------------------');
+=======
+
+	    // for (key in authenticatedUsers){
+	    // 	if (authenticatedUsers[key].length == 0){
+	    // 		delete authenticatedUsers[key];
+	    // 	}
+	    // }
+>>>>>>> remotes/origin/remote-dev
 
 	    socket.on('send.message', function(msg){
 	    	console.log(msg);
@@ -56,7 +68,6 @@ module.exports = function(io, handler){
 	    			authenticatedUsers[client].splice(i, 1);
 	    		}
 	    	});
-	    	console.log('dis')
 	    });
 
 	});

@@ -69,7 +69,7 @@ module.exports.login = function(req, res, next){
 			var errors = [];
 			errors.push({
 				status: 403,
-				message: 'User not found'
+				message: config.errorMessages.authentication.login.userNotFound
 			});
 			res.status(403);
 			res.json({
@@ -79,7 +79,7 @@ module.exports.login = function(req, res, next){
 			var errors = [];
 			errors.push({
 				status: 401,
-				message: 'Invalid password'
+				message: config.errorMessages.authentication.login.invalidPassword
 			});
 			res.status(401);
 			res.json({
@@ -117,7 +117,7 @@ module.exports.protected = function(req, res, next) {
 
     	jwt.verify(token, config.private.secretAuthKey, function(err, decoded){      
       		if (err) {
-	        	return res.json({ success: false, message: 'Failed to authenticate token.' });    
+	        	return res.json({ success: false, message: config.errorMessages.authentication.protected.tokenVerificationFailed });    
 	      	} else {
 	       		// if everything is good, save to request for use in other routes
 	        	req.decoded = decoded;    
@@ -129,7 +129,7 @@ module.exports.protected = function(req, res, next) {
     	return res.status(403).json({
     		status: 403,
         	success: false, 
-        	message: 'No token provided' 
+        	message: config.errorMessages.authentication.protected.noToken 
     	});
 
   	}
