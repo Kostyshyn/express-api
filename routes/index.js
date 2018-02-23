@@ -1,14 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-var userRouter = require('./api/users');
-var authRouter = require('./api/auth');
+var apiRouter = require('./api')
+var adminRouter =  require('./admin');
 
-var authController = require('../controllers/auth');
-
-router.use('/', authRouter);
-router.use('/users', authController.protected, userRouter);
-
-
+router.use('/api', apiRouter);
+router.use('/', adminRouter);
 
 module.exports = router;
