@@ -52,6 +52,14 @@ var userSchema = mongoose.Schema({
 	// 	type: Schema.ObjectId,
 	// 	ref: 'Comment'
 	// }],
+	// followers: [{
+	// 	type: Schema.ObjectId,
+	// 	ref: 'User'
+	// }],
+	// follows: [{
+	// 	type: Schema.ObjectId,
+	// 	ref: 'User'
+	// }],
 	created: {
 		type: Date,
 		default: Date.now

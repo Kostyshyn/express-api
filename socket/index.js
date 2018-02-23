@@ -39,19 +39,10 @@ module.exports = function(io, handler){
 	    	}
 	    }
 
-<<<<<<< HEAD
 	   	for (key in authenticatedUsers){
 	    	console.log(key, authenticatedUsers[key].length);
 	    }
 	    console.log('--------------------');
-=======
-
-	    // for (key in authenticatedUsers){
-	    // 	if (authenticatedUsers[key].length == 0){
-	    // 		delete authenticatedUsers[key];
-	    // 	}
-	    // }
->>>>>>> remotes/origin/remote-dev
 
 	    socket.on('send.message', function(msg){
 	    	console.log(msg);
