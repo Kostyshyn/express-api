@@ -112,12 +112,11 @@ module.exports.login = function(req, res, next){
 
 module.exports.protected = function(req, res, next) {
  	var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
   	if (token) {
 
     	jwt.verify(token, config.private.secretAuthKey, function(err, decoded){      
       		if (err) {
-	        	return res.json({ success: false, message: config.errorMessages.authentication.protected.tokenVerificationFailed });    
+	        	res.status(401).json({ success: false, message: config.errorMessages.authentication.protected.tokenVerificationFailed });    
 	      	} else {
 	       		// if everything is good, save to request for use in other routes
 	        	req.decoded = decoded;    
@@ -126,12 +125,11 @@ module.exports.protected = function(req, res, next) {
     	});
 
   	} else {
-    	return res.status(403).json({
+    	res.status(403).json({
     		status: 403,
         	success: false, 
         	message: config.errorMessages.authentication.protected.noToken 
     	});
-
   	}
 };
 

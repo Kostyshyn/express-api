@@ -20,7 +20,7 @@
 			},
 			"protected": {
 				"tokenVerificationFailed": "Неправильний токен",
-				"noTken": "Немає токена"
+				"noToken": "Немає токена"
 			}
 		}
 	}

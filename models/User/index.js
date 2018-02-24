@@ -52,14 +52,14 @@ var userSchema = mongoose.Schema({
 	// 	type: Schema.ObjectId,
 	// 	ref: 'Comment'
 	// }],
-	// followers: [{
-	// 	type: Schema.ObjectId,
-	// 	ref: 'User'
-	// }],
-	// follows: [{
-	// 	type: Schema.ObjectId,
-	// 	ref: 'User'
-	// }],
+	followers: [{
+		type: Schema.ObjectId,
+		ref: 'User'
+	}],
+	follows: [{
+		type: Schema.ObjectId,
+		ref: 'User'
+	}],
 	created: {
 		type: Date,
 		default: Date.now
@@ -93,11 +93,14 @@ module.exports.createUser = function(user){
 	});
 };
 
-module.exports.readUser = function(query, fields){
+module.exports.readUser = function(query, fields, populate){
 	var query = query;
 	var fields = fields || {};
+	var populate = populate || null;
 	return new Promise(function(resolve, reject){
-		User.findOne(query, fields , function(err, user){
+		User.findOne(query, fields).populate({
+			path: populate
+		}).exec(function(err, user){
 			if (err){
 				reject(err);
 			} else {
@@ -121,3 +124,4 @@ module.exports.allUsers = function(query, fields, options){
 		});	
 	});
 };
+

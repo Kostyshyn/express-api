@@ -11,12 +11,13 @@ module.exports = function(io, handler){
 
 	var authenticatedUsers = {};
 
-	Events.on('notification', function(note){
-	    console.log(note.message);
-	    console.log('======')
-	    authenticatedUsers[note.to].forEach(function(soc){
-	    	soc.emit('notification', note.message);
-	    });
+	Events.on('notification', function(notification){
+	    console.log(notification);
+	    if (authenticatedUsers[notification.to]){
+		    authenticatedUsers[notification.to].forEach(function(soc){
+		    	soc.emit('notification', notification);
+		    });
+	    }
 	});
 
 	io.sockets.on('connection', socketioJwt.authorize({
