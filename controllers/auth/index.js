@@ -39,7 +39,9 @@ module.exports.register = function(req, res, next){
 					info: user.info,
 					profile_img: user.profile_img,
 					role: user.role,
-					id: user._id
+					id: user._id,
+					follows: user.follows,
+					followers: user.followers
 				};
 
 				res.status(200);
@@ -97,7 +99,9 @@ module.exports.login = function(req, res, next){
 				info: user.info,
 				profile_img: user.profile_img,
 				role: user.role,
-				id: user._id
+				id: user._id,
+				follows: user.follows,
+				followers: user.followers
 			};
 
 			res.status(200);

@@ -53,12 +53,10 @@ var userSchema = mongoose.Schema({
 	// 	ref: 'Comment'
 	// }],
 	followers: [{
-		type: Schema.ObjectId,
-		ref: 'User'
+		id: Schema.ObjectId
 	}],
 	follows: [{
-		type: Schema.ObjectId,
-		ref: 'User'
+		id: Schema.ObjectId
 	}],
 	created: {
 		type: Date,
@@ -98,9 +96,7 @@ module.exports.readUser = function(query, fields, populate){
 	var fields = fields || {};
 	var populate = populate || null;
 	return new Promise(function(resolve, reject){
-		User.findOne(query, fields).populate({
-			path: populate
-		}).exec(function(err, user){
+		User.findOne(query, fields, function(err, user){
 			if (err){
 				reject(err);
 			} else {

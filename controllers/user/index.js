@@ -48,7 +48,7 @@ module.exports.followUser = function(req, res, next){
 	var follower = req.body.follower;
 	var follows = req.params.href;
 	var followerQuery = { _id: follower };
-	User.readUser(followerQuery, '-password', 'follows').then(function(follower){
+	User.readUser(followerQuery, '-password').then(function(follower){
 		if (!follower){
 			var errors = [];
 			errors.push({
@@ -60,7 +60,7 @@ module.exports.followUser = function(req, res, next){
 			});	
 		} else {
 			var followsQuery = { href: follows };
-			User.readUser(followsQuery, '-password', 'followers').then(function(follows){
+			User.readUser(followsQuery, '-password').then(function(follows){
 				if (!follows){
 					var errors = [];
 					errors.push({
@@ -71,11 +71,10 @@ module.exports.followUser = function(req, res, next){
 						errors: errors
 					});	
 				} else {
-					console.log(follower.username, follows.username);
 					if (isFollow(follower.follows, follows)){
 						User.findOneAndUpdate(followerQuery, {
-							$pull: { follows: {
-								_id: follows.id
+							$pop: { follows: {
+								id: follows.id
 							} }
 						}, {
 							new: true
@@ -84,8 +83,8 @@ module.exports.followUser = function(req, res, next){
 								next(err);
 							} else {
 								User.findOneAndUpdate(followsQuery, {
-									$pull: { followers: {
-										_id: follower.id
+									$pop: { followers: {
+										id: follower.id
 									} }
 								}, {
 									new: true
@@ -102,35 +101,29 @@ module.exports.followUser = function(req, res, next){
 							}							
 						});
 					} else {
-						User.findOneAndUpdate(followerQuery, {
-							$push: { follows: follows }
-						}, {
-							new: true
-						}, function(err, follower){
+						follower.follows.push(follows.id);
+						follower.save(function(err, follower){
 							if (err){
 								next(err);
 							} else {
-								User.findOneAndUpdate(followsQuery, {
-									$push: { followers: follower }
-								}, {
-									new: true
-								}, function(err, follows){
+								follows.followers.push(follower.id);
+								follows.save(function(err, follows){
 									if (err){
 										next(err);
 									} else {
-										// Events.emit('notification', {
-										// 	type: 'following',
-										// 	from: follower.id,
-										// 	to: follows.id,
-										// 	payload: null
-										// });
+										Events.emit('notification', {
+											type: 'following',
+											from: follower.id,
+											to: follows.id,
+											payload: null
+										});
 										res.status(200).json({
 											status: 200,
 											user: follows
 										});
 									}
 								});
-							}							
+							}
 						});
 					}
 				}
@@ -146,7 +139,7 @@ module.exports.followUser = function(req, res, next){
 function isFollow(followers, follows){ // array of followers and follows object
 	var found = false;
 	for (var i = 0; i < followers.length; i++){
-		if (followers[i].id == follows.id){
+		if (followers[i]._id.toString() == follows._id.toString()){
 			found = true;
 			break;
 		}
