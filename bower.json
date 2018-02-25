@@ -1,0 +1,33 @@
+{
+  "name": "express-api",
+  "description": "",
+  "main": "./bin/www",
+  "authors": [
+    "kostyshyn@ua.fm"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "express",
+    "vue",
+    "mongodb",
+    "rest",
+    "api",
+    "spa",
+    "blog",
+    "socketio"
+  ],
+  "homepage": "https://github.com/Kostyshyn/express-api",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "bulma": "^0.6.2",
+    "chart.js": "^2.7.1"
+  }
+}

@@ -106,12 +106,15 @@ module.exports.readUser = function(query, fields, populate){
 	});
 };
 
-module.exports.allUsers = function(query, fields, options){
+module.exports.allUsers = function(query, fields, options, sort, limit, skip){
 	var query = query || null;
 	var fields = fields || {};
 	var options = options || {};
+	var sort = sort || null;
+	var limit = limit || null;
+	var skip = skip || null;
 	return new Promise(function(resolve, reject){
-		User.find(query, fields, options, function(err, users){
+		User.find(query, fields, options).limit(limit).skip(skip).sort(sort).exec(function(err, users){
 			if (err){
 				reject(err);
 			} else {

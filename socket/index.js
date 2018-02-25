@@ -34,6 +34,22 @@ module.exports = function(io, handler){
 	    } else {
 	    	authenticatedUsers[client] = [];
 	    	authenticatedUsers[client].push(socket);
+	    	User.findOne({ _id: client }, function(err, user){
+			    if(err){
+			       	console.log(err)
+			    } else if (user){
+			       	user.online = true;
+			       	user.save(function(err, user){
+			       		if (err){
+			       			console.log(err);
+			       		} else {
+			       			
+			       		}
+			       	});
+			    } else {
+			       	console.log('user not found')
+			    }
+			});
 	    }
 
 	   	for (key in authenticatedUsers){
@@ -76,6 +92,25 @@ module.exports = function(io, handler){
 	    	authenticatedUsers[client].some(function(item, i){
 	    		if (authenticatedUsers[client][i].id == socket.id){
 	    			authenticatedUsers[client].splice(i, 1);
+	    			if (authenticatedUsers[client].length == 0){
+				    	User.findOne({ _id: client }, function(err, user){
+				    		if(err){
+				    			console.log(err)
+				    		} else if (user){
+				    			user.online = false;
+				    			user.save(function(err, user){
+				    				if (err){
+				    					console.log(err);
+				    				} else {
+
+				    				}
+				    			});
+				    		} else {
+				    			console.log('user not found')
+				    		}
+				    	});	    				
+	    				delete authenticatedUsers[client];
+	    			}
 	    		}
 	    	});
 	    });

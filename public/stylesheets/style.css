@@ -1,9 +1,52 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+/*general*/
+.user-image {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	border-radius: 50%;
 
-a {
-  color: #00B7FF;
+	background-color: #c1c1c1;
+} 
+.user-image.sm {
+	height: 32px;
+	width: 32px;
+}
+/* user search */
+.user-search-form {
+	padding-bottom: 20px;
+}
+.user-search-form .control.check-center {
+	/*line-height: 36px;*/
+	display: flex !important;
+}
+.user-search-form .control.check-center .checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+.user-search-form .control.check-center .checkbox input {
+	margin-right: 5px;
+}
+.user-table {
+	width: 100%;
+	overflow-x: auto;
+}
+.user-table .table {
+	width: 100%;
+}
+.user-table .table .tag.table-online-indicator {
+	margin-top: 14px;
+}
+.user-table .table th,
+.user-table .table td {
+	text-align: center;
+	line-height: 49px;
+}
+.user-link {
+	display: flex;
+}
+.user-link .user-image.sm {
+	margin-top: 8px;
+	margin-right: 10px;
 }
 
