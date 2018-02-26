@@ -24,6 +24,9 @@
     align-items: center;
     margin-top: 30px;
 }
+.user-search-form .control .button.is-primary {
+	margin-top: 30px;
+}
 .user-search-form .control.check-center .checkbox input {
 	margin-right: 5px;
 }
