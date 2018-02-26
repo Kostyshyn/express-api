@@ -56,7 +56,6 @@
 				<tr>
 					<th>#</th>
 					<th>Name</th>
-					<th>Online</th>
 					<th>Posts</th>
 					<th>Comments</th>
 					<th>Likes</th>
@@ -71,15 +70,13 @@
 					<th><%= i + 1 %></th>
 					<th><a href="/users/<%= users[i].href %>" class="user-link">
 						<div class="user-image sm"></div>
+						<%if (users[i].online) { %>
+							<span class="online-t"></span>
+						<% } else { %>
+							<span class="online-f"></span>
+						<% }; %>
 						<%= users[i].username %>
 					</a></th>
-					<th class="table-online-indicator">
-						<%if (users[i].online) { %>
-							<span class="tag is-success"></span>
-						<% } else { %>
-							<span class="tag is-danger"></span>
-						<% }; %>
-					</th>
 					<th>0</th>
 					<th>0</th>
 					<th>0</th>
