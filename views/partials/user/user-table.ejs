@@ -73,11 +73,11 @@
 						<div class="user-image sm"></div>
 						<%= users[i].username %>
 					</a></th>
-					<th>
+					<th class="table-online-indicator">
 						<%if (users[i].online) { %>
-							<span class="tag is-success table-online-indicator"></span>
+							<span class="tag is-success"></span>
 						<% } else { %>
-							<span class="tag is-danger table-online-indicator"></span>
+							<span class="tag is-danger"></span>
 						<% }; %>
 					</th>
 					<th>0</th>

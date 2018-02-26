@@ -37,19 +37,22 @@
 .user-table .table {
 	width: 100%;
 }
-.user-table .table .tag.table-online-indicator {
-	margin-top: 14px;
+.user-table .table .table-online-indicator {
+	/*display: inline-block;*/
+	/*line-height: 32px;*/
+	/*padding-top: 12px;*/
 }
 .user-table .table th,
 .user-table .table td {
 	text-align: center;
-	line-height: 49px;
+	line-height: 32px;
 }
 .user-link {
 	display: flex;
+	align-items: center;
 }
 .user-link .user-image.sm {
-	margin-top: 8px;
+	/*margin-top: 4px;*/
 	margin-right: 10px;
 }
 
