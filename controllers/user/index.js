@@ -45,7 +45,7 @@ module.exports.getUser = function(req, res, next){
 };
 
 module.exports.followUser = function(req, res, next){
-	var follower = req.body.follower;
+	var follower = req.decoded.id;
 	var follows = req.params.href;
 	var followerQuery = { _id: follower };
 	User.readUser(followerQuery, '-password').then(function(follower){
