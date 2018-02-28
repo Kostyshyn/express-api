@@ -5,9 +5,9 @@ var moment = require('moment');
 var Service = require('../../services');
 
 module.exports.getUsers = function(req, res, next){
-	var online = req.body.online ? true : false;
-	var sort = req.body.options ? { [req.body.options]: -1 } : null;
-	var username = req.body.username ? req.body.username.trim() : false;
+	var online = req.query.online ? true : false;
+	var sort = req.query.options ? { [req.query.options]: -1 } : null;
+	var username = req.query.username ? req.query.username.trim() : false;
 	var search;
 	if (username && online){
 		search = {

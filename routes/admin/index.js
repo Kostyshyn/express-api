@@ -7,6 +7,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/users', adminController.getUsers);
-router.post('/users', adminController.getUsers);
+// router.post('/users', adminController.getUsers);
 
 module.exports = router;
