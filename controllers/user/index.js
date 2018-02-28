@@ -71,60 +71,73 @@ module.exports.followUser = function(req, res, next){
 						errors: errors
 					});	
 				} else {
-					if (isFollow(follower.follows, follows)){
-						User.findOneAndUpdate(followerQuery, {
-							$pop: { follows: {
-								id: follows.id
-							} }
-						}, {
-							new: true
-						}, function(err, follower){
-							if (err){
-								next(err);
-							} else {
-								User.findOneAndUpdate(followsQuery, {
-									$pop: { followers: {
-										id: follower.id
-									} }
-								}, {
-									new: true
-								}, function(err, follows){
-									if (err){
-										next(err);
-									} else {
-										res.status(200).json({
-											status: 200,
-											user: follows
-										});
-									}
-								});
-							}							
+					if (follower.id == follows.id){
+						var errors = [];
+						errors.push({
+							status: 404,
+							message: 'You can\'t follow youself'
+						});
+						res.status(404).json({
+							errors: errors
 						});
 					} else {
-						follower.follows.push(follows.id);
-						follower.save(function(err, follower){
-							if (err){
-								next(err);
-							} else {
-								follows.followers.push(follower.id);
-								follows.save(function(err, follows){
-									if (err){
-										next(err);
-									} else {
-										Events.emit('notification', {
-											type: 'following',
-											from: follower.id,
-											to: follows.id,
-											payload: null
-										});
-										res.status(200).json({
-											status: 200,
-											user: follows
-										});
-									}
-								});
-							}
-						});
+
+						if (isFollow(follower.follows, follows)){
+							User.findOneAndUpdate(followerQuery, {
+								$pop: { follows: {
+									id: follows.id
+								} }
+							}, {
+								new: true
+							}, function(err, follower){
+								if (err){
+									next(err);
+								} else {
+									User.findOneAndUpdate(followsQuery, {
+										$pop: { followers: {
+											id: follower.id
+										} }
+									}, {
+										new: true
+									}, function(err, follows){
+										if (err){
+											next(err);
+										} else {
+											res.status(200).json({
+												status: 200,
+												user: follows
+											});
+										}
+									});
+								}							
+							});
+						} else {
+							follower.follows.push(follows.id);
+							follower.save(function(err, follower){
+								if (err){
+									next(err);
+								} else {
+									follows.followers.push(follower.id);
+									follows.save(function(err, follows){
+										if (err){
+											next(err);
+										} else {
+											Events.emit('notification', {
+												type: 'following',
+												from: follower.id,
+												to: follows.id,
+												payload: null
+											});
+											res.status(200).json({
+												status: 200,
+												user: follows
+											});
+										}
+									});
+								}
+							});
+						}
+						
 					}
 				}
 			});
