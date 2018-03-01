@@ -1,6 +1,7 @@
 var socketioJwt = require('socketio-jwt');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
+var service = require('../services');
 
 var mongoose = require('mongoose');
 var User = require('../models/User');
@@ -12,7 +13,7 @@ module.exports = function(io, handler){
 	var authenticatedUsers = {};
 
 	Events.on('notification', function(notification){
-	    console.log(notification);
+	    // console.log(notification);
 	    if (authenticatedUsers[notification.to]){
 		    authenticatedUsers[notification.to].forEach(function(soc){
 		    	soc.emit('notification', notification);
@@ -34,22 +35,12 @@ module.exports = function(io, handler){
 	    } else {
 	    	authenticatedUsers[client] = [];
 	    	authenticatedUsers[client].push(socket);
-	    	User.findOne({ _id: client }, function(err, user){
-			    if(err){
-			       	console.log(err)
-			    } else if (user){
-			       	user.online = true;
-			       	user.save(function(err, user){
-			       		if (err){
-			       			console.log(err);
-			       		} else {
-			       			
-			       		}
-			       	});
-			    } else {
-			       	console.log('user not found')
-			    }
-			});
+
+	    	service.setOnlineStatus(client, true, function(err, user){
+	    		if (err){
+	    			console.log(err);
+	    		}
+	    	});
 	    }
 
 	   	for (key in authenticatedUsers){
@@ -93,20 +84,9 @@ module.exports = function(io, handler){
 	    		if (authenticatedUsers[client][i].id == socket.id){
 	    			authenticatedUsers[client].splice(i, 1);
 	    			if (authenticatedUsers[client].length == 0){
-				    	User.findOne({ _id: client }, function(err, user){
-				    		if(err){
-				    			console.log(err)
-				    		} else if (user){
-				    			user.online = false;
-				    			user.save(function(err, user){
-				    				if (err){
-				    					console.log(err);
-				    				} else {
-
-				    				}
-				    			});
-				    		} else {
-				    			console.log('user not found')
+				    	service.setOnlineStatus(client, false, function(err, user){
+				    		if (err){
+				    			console.log(err);
 				    		}
 				    	});	    				
 	    				delete authenticatedUsers[client];
@@ -116,74 +96,4 @@ module.exports = function(io, handler){
 	    });
 
 	});
-
-	// io.emit('custon', 'hello from server');
-
-
-
-	// io.sockets.on('connection', function (socket) {
-	//     // console.log(socket.decoded_token.id, 'connected');
-
-	//     console.log('connected', socket.id);
-
-	//     //socket.on('event');
-	//     socket.on('logout', function(user){
-	//     	console.log(user, 'is logged out');
-	//     });
-
-	//     socket.on('authenticate', function(token){
-	//     	// console.log('token', token)
-	//     	if (token) {
-
-	// 	    	jwt.verify(token, config.private.secretAuthKey, function(err, decoded){      
-	// 	      		if (err) {
-	// 		        	// return res.json({ success: false, message: 'Failed to authenticate token.' }); 
-	// 		        	socket.emit('err', 'this is error')
-	// 		      	} else {
-	// 		       		// if everything is good, save to request for use in other routes
-	// 		       		authenticatedUsers[socket.id] = decoded.id;
-	// 		       		User.findOne({ _id: decoded.id }, function(err, user){
-	// 		       			if(err){
-	// 		       				console.log(err)
-	// 		       			} else if (user){
-	// 		       				user.online = true;
-	// 		       				user.save(function(err, user){
-	// 		       					if (err){
-	// 		       						console.log(err);
-	// 		       					}
-	// 		       				});
-	// 		       			} else {
-	// 		       				console.log('1 user not found')
-	// 		       			}
-	// 		       		});
-	// 		        	console.log(authenticatedUsers);    
-	// 		      	}
-	// 	    	});
-	// 	    }
-	//     });
-
-	//     socket.on('disconnect', function(){
-	//     	console.log('disconnect', socket.id)
-	//     	User.findOne({ _id: authenticatedUsers[socket.id] }, function(err, user){
-	//     		if(err){
-	//     			console.log(err)
-	//     		} else if (user){
-	//     			console.log('set ofline')
-	//     			user.online = false;
-	//     			user.save(function(err, user){
-	//     				if (err){
-	//     					console.log(err);
-	//     				} else {
-	//     					delete authenticatedUsers[socket.id];
-	// 	    				console.log(authenticatedUsers)
-	//     				}
-	//     			});
-	//     		} else {
-	//     			console.log('2 user not found')
-	//     		}
-	//     	});
-
-	//     });
-	// });
-
 };

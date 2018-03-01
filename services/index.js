@@ -1,10 +1,12 @@
 var Events = require('../events');
+var User = require('../models/User');
 
 module.exports.notify = function(type, payload){
-	console.log({
-		type: type,
-		payload: payload
-	});
+	// console.log({
+	// 	type: type,
+	// 	payload: payload
+	// });
+	
 	// Events.emit('notification', {
 	// 	type: 'following',
 	// 	from: follower.id,
@@ -13,10 +15,19 @@ module.exports.notify = function(type, payload){
 	// });
 };
 
-// module.exports.online = function(user){
-
-// };
-
-// module.exports.offline = function(user){
-
-// };
+module.exports.setOnlineStatus = function(client, status, callback){
+	User.findOne({ _id: client }, function(err, user){
+		if(err){
+			callback(err, null);
+		} else if (user){
+			user.online = status;
+			user.save(function(err, user){
+				if (err){
+					callback(err, null);
+				} else {
+					callback(null, user.id);
+				}
+			});
+		}
+	});
+};

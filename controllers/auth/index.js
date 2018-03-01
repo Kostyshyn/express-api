@@ -29,7 +29,7 @@ module.exports.register = function(req, res, next){
 			User.createUser(newUser).then(function(user){
 
 				var token = jwt.sign({ id: user._id }, config.private.secretAuthKey, {
-					expiresIn: 86400 // 24 hours
+					expiresIn: config.private.expires // 86400 // 24 hours
 				});
 
 				var responseUser = {
@@ -89,7 +89,7 @@ module.exports.login = function(req, res, next){
 			});
 		} else {
 			var token = jwt.sign({ id: user._id }, config.private.secretAuthKey, {
-				expiresIn: 86400 // 24 hours
+				expiresIn: config.private.expires 
 			});
 
 			var responseUser = {

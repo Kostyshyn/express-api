@@ -75,7 +75,7 @@ module.exports.followUser = function(req, res, next){
 						var errors = [];
 						errors.push({
 							status: 404,
-							message: 'You can\'t follow youself'
+							message: 'You can\'t follow yourself'
 						});
 						res.status(404).json({
 							errors: errors
