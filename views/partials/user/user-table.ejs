@@ -68,15 +68,18 @@
 				<% for (var i=0; i < users.length; i++) {%>
 				<tr>
 					<th><%= i + 1 %></th>
-					<th><a href="/users/<%= users[i].href %>" class="user-link">
-						<div class="user-image sm"></div>
-						<%if (users[i].online) { %>
-							<span class="online-t"></span>
-						<% } else { %>
-							<span class="online-f"></span>
-						<% }; %>
-						<%= users[i].username %>
-					</a></th>
+					<th>
+					<!-- <th style="display: flex; justify-content: center;"> -->
+						<a href="/users/<%= users[i].href %>" class="user-link">
+							<div class="user-image sm"></div>
+							<%if (users[i].online) { %>
+								<span class="online-t"></span>
+							<% } else { %>
+								<span class="online-f"></span>
+							<% }; %>
+							<%= users[i].username %>
+						</a>
+					</th>
 					<th>0</th>
 					<th>0</th>
 					<th>0</th>
