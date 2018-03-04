@@ -72,6 +72,7 @@ module.exports.followUser = function(req, res, next){
 					});	
 				} else {
 					if (follower.id == follows.id){
+
 						var errors = [];
 						errors.push({
 							status: 404,
@@ -81,11 +82,10 @@ module.exports.followUser = function(req, res, next){
 							errors: errors
 						});
 					} else {
-
 						if (isFollow(follower.follows, follows)){
 							User.findOneAndUpdate(followerQuery, {
-								$pop: { follows: {
-									id: follows.id
+								$pull: { follows: {
+									_id: follows._id.toString()
 								} }
 							}, {
 								new: true
@@ -94,8 +94,8 @@ module.exports.followUser = function(req, res, next){
 									next(err);
 								} else {
 									User.findOneAndUpdate(followsQuery, {
-										$pop: { followers: {
-											id: follower.id
+										$pull: { followers: {
+											_id: follower._id.toString()
 										} }
 									}, {
 										new: true
