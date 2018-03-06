@@ -38,7 +38,7 @@ module.exports.getUsers = function(req, res, next){
 		};
 	}
 
-	// console.log(search)
+	console.log(search)
 
 	User.allUsers(search.query, '-password', {}, search.sort).then(function(users){
 		res.render('partials/user/user-table', {
