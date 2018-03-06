@@ -21,6 +21,9 @@ module.exports.setOnlineStatus = function(client, status, callback){
 			callback(err, null);
 		} else if (user){
 			user.online = status;
+			if (status == false){
+				user.last_seen = Date.now();
+			};
 			user.save(function(err, user){
 				if (err){
 					callback(err, null);

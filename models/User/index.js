@@ -58,6 +58,10 @@ var userSchema = mongoose.Schema({
 	follows: [{
 		id: Schema.ObjectId
 	}],
+	last_seen: {
+		type: Date,
+		default: Date.now		
+	},
 	created: {
 		type: Date,
 		default: Date.now

@@ -56,6 +56,7 @@
 				<tr>
 					<th>#</th>
 					<th>Name</th>
+					<th>Last seen</th>
 					<th>Posts</th>
 					<th>Comments</th>
 					<th>Likes</th>
@@ -79,6 +80,13 @@
 							<% }; %>
 							<%= users[i].username %>
 						</a>
+					</th>
+					<th>
+						<%if (users[i].online) { %>
+							online
+						<% } else { %>
+							<%= moment(users[i].last_seen).fromNow() %>
+						<% }; %>
 					</th>
 					<th>0</th>
 					<th>0</th>
