@@ -7,10 +7,10 @@ var Chat = require('./chat.js');
 var messageSchema = mongoose.Schema({
 	chat: {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+        ref : 'Chat'
 	},
     message : String,
-    meta : [{
+    meta : {
         user : {
             type : mongoose.Schema.Types.ObjectId,
             ref : 'User'
@@ -20,7 +20,7 @@ var messageSchema = mongoose.Schema({
         	type: Boolean,
         	default: false
         }
-    }],
+    },
 	created: {
 		type: Date,
 		default: Date.now
@@ -28,3 +28,15 @@ var messageSchema = mongoose.Schema({
 });
 
 var Message = module.exports = mongoose.model('Message', messageSchema);
+
+module.exports.createMessage = function(message){
+    return new Promise(function(resolve, reject){
+        Message.create(message, function(err, message){
+            if (err){
+                reject(err);
+            } else {
+                resolve(message);
+            }
+        });     
+    });
+};

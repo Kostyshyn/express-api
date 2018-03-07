@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 var User = require('../User');
-var Message = req('./message.js');
+var Message = require('./message.js');
 
 var chatSchema = mongoose.Schema({
 	participant1: {                
