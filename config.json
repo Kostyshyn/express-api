@@ -10,6 +10,9 @@
 		"secretAuthKey": "secret",
 		"expires": 86400
 	},
+	"chat": {
+		"loadMessagesSkip" : 20
+	},
 	"errorMessages": {
 		"authentication": {
 			"login": {

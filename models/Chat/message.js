@@ -15,7 +15,10 @@ var messageSchema = mongoose.Schema({
             type : mongoose.Schema.Types.ObjectId,
             ref : 'User'
         },
-        // delivered : Boolean,
+        delivered : {
+            type: Boolean,
+            default: false
+        },
         read : {
         	type: Boolean,
         	default: false
@@ -38,5 +41,22 @@ module.exports.createMessage = function(message){
                 resolve(message);
             }
         });     
+    });
+};
+
+module.exports.getMessages = function(query, fields, limit, skip, sort){
+    var query = query;
+    var fields = fields || {};
+    var sort = sort || null;
+    var limit = limit || null;
+    var skip = skip || null;
+    return new Promise(function(resolve, reject){
+        Message.find(query, fields).sort(sort).limit(limit).skip(skip).exec(function(err, messages){
+            if (err){
+                reject(err);
+            } else {
+                resolve(messages);
+            }
+        }); 
     });
 };

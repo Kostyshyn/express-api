@@ -43,6 +43,7 @@ module.exports.openChat = function(req, res, next){
 							errors: errors
 						});
 					} else {
+						var skip = config.chat.loadMessagesSkip;
 						Chat.readChat({
 							$or: [
 								{
@@ -54,7 +55,9 @@ module.exports.openChat = function(req, res, next){
 									participant2: participant1._id
 								}
 							]
-						}, '', 'participant1 participant2 messages'
+						}, {
+							messages: { $slice: -skip }
+						}, 'participant1 participant2 messages'
 						).then(function(chat){
 							if (chat){
 								res.status(200).json({
@@ -106,7 +109,8 @@ module.exports.sendMessage = function(req, res, next){
 						chat: chat,
 						message: messageText,
 						meta: {
-							user: user
+							user: user,
+							delivered: true
 						},
 						created: created
 					}).then(function(message){
@@ -149,4 +153,53 @@ module.exports.sendMessage = function(req, res, next){
 	}).catch(function(err){
 		next(err);
 	});
+};
+
+module.exports.loadMessages = function(req, res, next){
+	var chatId = req.query.chat;
+	var page = req.query.page ? parseInt(req.query.page) + 1 : req.query.page;
+	var limit = config.chat.loadMessagesSkip;
+
+	// Chat.readChat({ _id: chatId }, { messages: { $slice: [ -( page * skip + 1), skip ] } }, 'messages').then(function(chat){
+	// 	if (chat){
+	// 		res.status(200).json({
+	// 			status: 200,
+	// 			messages: chat.messages,
+	// 			page: page
+	// 		});
+	// 	} else {
+	// 		var errors = [];
+	// 		errors.push({
+	// 			status: 404,
+	// 			message: 'Chat not found'
+	// 		});
+	// 		res.status(404).json({
+	// 			errors: errors
+	// 		});
+	// 	}	
+	// }).catch(function(err){
+	// 	next(err);
+	// });
+
+	Message.getMessages({
+		chat: { _id: chatId }
+	}, '', limit, (limit * page + 1), { created: -1 }).then(function(messages){
+		if (messages.length > 0){
+			res.status(200).json({
+				status: 200,
+				messages: messages.reverse(),
+				page: page
+			});
+		} else {
+			res.status(200).json({
+				status: 200,
+				messages: null,
+				page: null 
+			});
+		}
+
+	}).catch(function(err){
+		next(err);
+	});
+
 };

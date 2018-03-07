@@ -37,12 +37,13 @@ module.exports.createChat = function(chat){
 	});
 };
 
-module.exports.readChat = function(query, fields, populate){
+module.exports.readChat = function(query, fields, populate, sort){
 	var query = query;
 	var fields = fields || {};
 	var populate = populate || null;
+	var sort = sort || null;
 	return new Promise(function(resolve, reject){
-		Chat.findOne(query, fields).populate(populate).exec(function(err, chat){
+		Chat.findOne(query, fields).populate(populate).sort(sort).exec(function(err, chat){
 			if (err){
 				reject(err);
 			} else {
