@@ -11,7 +11,7 @@
 		"expires": 86400
 	},
 	"chat": {
-		"loadMessagesSkip" : 20
+		"loadMessagesSkip" : 25
 	},
 	"errorMessages": {
 		"authentication": {

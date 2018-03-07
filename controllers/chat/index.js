@@ -116,10 +116,30 @@ module.exports.sendMessage = function(req, res, next){
 					}).then(function(message){
 						Chat.addMessage({ 
 							_id: chatId 
-						}, message ).then(function(chat){
+						}, message ).then(function(chat_to_add){
 							res.status(200).json({
 								status: 200,
 								message: message
+							});
+							var to;
+							if (chat.participant1._id == participant1){
+								to = chat.participant2._id;
+							} else {
+								to = chat.participant1._id;
+							}
+							Events.emit('notification', {
+								to: to,
+								type: 'message',
+								payload: {
+									message: message.message,
+									meta: {
+										delivered: message.meta.delivered,
+										read: message.meta.read,
+										user: message.meta.user._id
+									},
+									created: message.created,
+									_id: message._id
+								}
 							});
 						}).catch(function(err){
 							next(err);
@@ -159,27 +179,6 @@ module.exports.loadMessages = function(req, res, next){
 	var chatId = req.query.chat;
 	var page = req.query.page ? parseInt(req.query.page) + 1 : req.query.page;
 	var limit = config.chat.loadMessagesSkip;
-
-	// Chat.readChat({ _id: chatId }, { messages: { $slice: [ -( page * skip + 1), skip ] } }, 'messages').then(function(chat){
-	// 	if (chat){
-	// 		res.status(200).json({
-	// 			status: 200,
-	// 			messages: chat.messages,
-	// 			page: page
-	// 		});
-	// 	} else {
-	// 		var errors = [];
-	// 		errors.push({
-	// 			status: 404,
-	// 			message: 'Chat not found'
-	// 		});
-	// 		res.status(404).json({
-	// 			errors: errors
-	// 		});
-	// 	}	
-	// }).catch(function(err){
-	// 	next(err);
-	// });
 
 	Message.getMessages({
 		chat: { _id: chatId }
