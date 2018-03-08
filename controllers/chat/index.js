@@ -5,6 +5,65 @@ var Message = require('../../models/Chat/message.js');
 var config = require('../../config');
 var Events = require('../../events');
 
+module.exports.getChats = function(req, res, next){
+	var userId = req.decoded.id;
+
+	// Chat.readChat({
+	// 	$or: [
+	// 	{
+	// 		participant1: userId
+	// 	},
+	// 	{
+	// 		participant2: userId
+	// 	}
+	// 	]
+	// }, 'participant1 participant2 messages'
+	// ).then(function(chats){
+	// 	if (chat){
+	// 		res.status(200).json({
+	// 			status: 200,
+	// 			chat: chat
+	// 		});
+	// 	} else {
+	// 		Chat.createChat({
+	// 			participant1: participant1,
+	// 			participant2: participant2
+	// 		}).then(function(chat){
+	// 			res.status(200).json({
+	// 				status: 200,
+	// 				chat: chat
+	// 			});
+	// 		}).catch(function(err){
+	// 			next(err);
+	// 		});
+	// 	}
+	// }).catch(function(err){
+	// 	next(err);
+	// });
+
+	Chat.find({
+		$or: [
+		{
+			participant1: userId
+		},
+		{
+			participant2: userId
+		}
+		]
+	}).populate('participant1 participant2').sort({ creation: -1 }).exec(function(err, chats){
+		if (err){
+			next(err);
+		} else {
+			res.status(200).json({
+				status: 200,
+				chats: chats
+			});
+		}
+	});
+
+
+};
+
 module.exports.openChat = function(req, res, next){
 	var participant1 = req.decoded.id;
 	var participant2 = req.params.href;
@@ -43,7 +102,7 @@ module.exports.openChat = function(req, res, next){
 							errors: errors
 						});
 					} else {
-						var skip = config.chat.loadMessagesSkip;
+						var limit = config.chat.loadLimit;
 						Chat.readChat({
 							$or: [
 								{
@@ -56,7 +115,7 @@ module.exports.openChat = function(req, res, next){
 								}
 							]
 						}, {
-							messages: { $slice: -skip }
+							messages: { $slice: -limit }
 						}, 'participant1 participant2 messages'
 						).then(function(chat){
 							if (chat){
@@ -178,7 +237,7 @@ module.exports.sendMessage = function(req, res, next){
 module.exports.loadMessages = function(req, res, next){
 	var chatId = req.query.chat;
 	var page = req.query.page ? parseInt(req.query.page) + 1 : req.query.page;
-	var limit = config.chat.loadMessagesSkip;
+	var limit = config.chat.loadLimit;
 
 	Message.getMessages({
 		chat: { _id: chatId }
