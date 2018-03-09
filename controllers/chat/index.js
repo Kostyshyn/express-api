@@ -8,39 +8,6 @@ var Events = require('../../events');
 module.exports.getChats = function(req, res, next){
 	var userId = req.decoded.id;
 
-	// Chat.readChat({
-	// 	$or: [
-	// 	{
-	// 		participant1: userId
-	// 	},
-	// 	{
-	// 		participant2: userId
-	// 	}
-	// 	]
-	// }, 'participant1 participant2 messages'
-	// ).then(function(chats){
-	// 	if (chat){
-	// 		res.status(200).json({
-	// 			status: 200,
-	// 			chat: chat
-	// 		});
-	// 	} else {
-	// 		Chat.createChat({
-	// 			participant1: participant1,
-	// 			participant2: participant2
-	// 		}).then(function(chat){
-	// 			res.status(200).json({
-	// 				status: 200,
-	// 				chat: chat
-	// 			});
-	// 		}).catch(function(err){
-	// 			next(err);
-	// 		});
-	// 	}
-	// }).catch(function(err){
-	// 	next(err);
-	// });
-
 	Chat.find({
 		$or: [
 		{
@@ -50,7 +17,7 @@ module.exports.getChats = function(req, res, next){
 			participant2: userId
 		}
 		]
-	}).populate('participant1 participant2 messages.message').sort({ creation: -1 }).exec(function(err, chats){
+	}).populate('participant1 participant2').sort({ creation: -1 }).exec(function(err, chats){
 		if (err){
 			next(err);
 		} else {
