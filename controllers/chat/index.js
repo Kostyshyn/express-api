@@ -50,7 +50,7 @@ module.exports.getChats = function(req, res, next){
 			participant2: userId
 		}
 		]
-	}).populate('participant1 participant2').sort({ creation: -1 }).exec(function(err, chats){
+	}).populate('participant1 participant2 messages.message').sort({ creation: -1 }).exec(function(err, chats){
 		if (err){
 			next(err);
 		} else {
