@@ -17,7 +17,16 @@ module.exports.getChats = function(req, res, next){
 			participant2: userId
 		}
 		]
-	}).populate('participant1 participant2').sort({ creation: -1 }).exec(function(err, chats){
+	}).populate([
+		{
+			path: 'participant1',
+			select: 'username href'
+		},
+		{
+			path: 'participant2',
+			select: 'username href'
+		}
+	]).sort({ creation: -1 }).exec(function(err, chats){
 		if (err){
 			next(err);
 		} else {
@@ -83,12 +92,25 @@ module.exports.openChat = function(req, res, next){
 							]
 						}, {
 							messages: { $slice: -limit }
-						}, 'participant1 participant2 messages'
+						}, [
+								{
+									path: 'participant1',
+									select: 'username href last_seen online'
+								},
+								{
+									path: 'participant2',
+									select: 'username href last_seen online'
+								},
+								{
+									path: 'messages'
+								}
+							]
 						).then(function(chat){
 							if (chat){
 								res.status(200).json({
 									status: 200,
-									chat: chat
+									chat: chat,
+									new: false
 								});
 							} else {
 								Chat.createChat({
@@ -97,7 +119,8 @@ module.exports.openChat = function(req, res, next){
 								}).then(function(chat){
 									res.status(200).json({
 										status: 200,
-										chat: chat
+										chat: chat,
+										new: true
 									});
 								}).catch(function(err){
 									next(err);
