@@ -25,6 +25,10 @@ module.exports.getChats = function(req, res, next){
 		{
 			path: 'participant2',
 			select: 'username href'
+		},
+		{
+			path: 'messages',
+			select: 'created'
 		}
 	]).sort({ creation: -1 }).exec(function(err, chats){
 		if (err){
