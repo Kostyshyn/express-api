@@ -44,6 +44,38 @@ module.exports.getUser = function(req, res, next){
 	})
 };
 
+module.exports.updateUser = function(req, res, next){
+	var query = { _id: req.decoded.id };
+	var file = req.file || null;
+	// var upadatedUser = req.body
+
+	// console.log('file', file.path);
+
+	User.updateUser(query, {
+		"$set": {
+			profile_img: file.path
+		}
+	}).then(function(user){
+		if (!user){
+			var errors = [];
+			errors.push({
+				status: 404,
+				message: 'User not found'
+			});
+			res.status(404).json({
+				errors: errors
+			});	
+		} else {
+			res.status(200).json({
+				status: 200,
+				user: user
+			});
+		}
+	}).catch(function(err){
+		next(err);
+	})
+};
+
 module.exports.followUser = function(req, res, next){
 	var follower = req.decoded.id;
 	var follows = req.params.href;

@@ -110,6 +110,21 @@ module.exports.readUser = function(query, fields, populate){
 	});
 };
 
+module.exports.updateUser = function(query, fields, options){
+	var query = query;
+	var fields = fields || {};
+	var options = options || { 'fields': '-password',  new: true };
+	return new Promise(function(resolve, reject){
+		User.findOneAndUpdate(query, fields, options,function(err, user){
+			if (err){
+				reject(err);
+			} else {
+				resolve(user);
+			}
+		});	
+	});
+};
+
 module.exports.allUsers = function(query, fields, options, sort, limit, skip){
 	var query = query || null;
 	var fields = fields || {};

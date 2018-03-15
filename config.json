@@ -13,6 +13,9 @@
 	"chat": {
 		"loadLimit" : 20
 	},
+	"upload": {
+		"maxFileSizeMb": 1
+	},
 	"errorMessages": {
 		"authentication": {
 			"login": {
