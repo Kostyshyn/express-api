@@ -1,6 +1,7 @@
 var User = require('../../models/User');
 var config = require('../../config');
 var Events = require('../../events');
+var sharp = require('sharp');
 
 module.exports.getAllUsers = function(req, res, next){
 	User.allUsers(null, '-password').then(function(users){
@@ -49,11 +50,12 @@ module.exports.updateUser = function(req, res, next){
 	var file = req.file || null;
 	// var upadatedUser = req.body
 
-	// console.log('file', file.path);
+	console.log('file', file);
+	sharp('./' + file.path).resize(128, 128).toFile(file.destination + '/thumb-' + file.filename);
 
 	User.updateUser(query, {
 		"$set": {
-			profile_img: file.path
+			profile_img: file.destination.substr(2) + '/thumb-' + file.filename
 		}
 	}).then(function(user){
 		if (!user){

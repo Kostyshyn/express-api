@@ -1,7 +1,6 @@
 var multer = require('multer');
 var config = require('../../config');
 var fs = require('fs');
-// var sharp = require('sharp');
 
 var storage = multer.diskStorage({
 	destination:function(req, file, cb){
@@ -9,9 +8,12 @@ var storage = multer.diskStorage({
 		checkDir(dir);
 		var files = fs.readdirSync(dir);
 		if (files.length > 0){
-			fs.unlinkSync(dir + '/' + files[0]);
+			for (let i = 0; i < files.length; i++){
+				fs.unlinkSync(dir + '/' + files[i]);
+			}
 		}
 		cb(null, dir);
+		console.log(files)
 	},
 	filename: function(req, file, cb){
 		cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname); 
