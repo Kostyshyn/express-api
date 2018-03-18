@@ -14,7 +14,7 @@
 		"loadLimit" : 20
 	},
 	"upload": {
-		"maxFileSizeMb": 1
+		"maxFileSizeMb": 10
 	},
 	"errorMessages": {
 		"authentication": {

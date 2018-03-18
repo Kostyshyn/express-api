@@ -1,13 +1,15 @@
 var multer = require('multer');
 var config = require('../../config');
 var fs = require('fs');
-// var sharp = require('sharp');
+var sharp = require('sharp');
 
 var storage = multer.diskStorage({
 	destination:function(req, file, cb){
 		var dir = './storage/' + req.decoded.id;
 		checkDir(dir);
 		var files = fs.readdirSync(dir);
+		sharp(dir + '/' + files[0]).resize(128, 128).toFile(dir + '/thumb.jpg')
+		console.log(files);
 		if (files.length > 0){
 			fs.unlinkSync(dir + '/' + files[0]);
 		}
@@ -19,7 +21,7 @@ var storage = multer.diskStorage({
 });
 
 var fileFilter = function(req, file, cb){
-	if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+	if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png'){
 		cb(null, true);
 	} else {
 		// cb(new Error('incorrect file extension'), false);
