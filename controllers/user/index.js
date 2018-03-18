@@ -2,6 +2,9 @@ var User = require('../../models/User');
 var config = require('../../config');
 var Events = require('../../events');
 var sharp = require('sharp');
+var upload = require('../upload');
+var uploadImage = upload.upload.single('profile-image');
+var fs = require('fs');
 
 module.exports.getAllUsers = function(req, res, next){
 	User.allUsers(null, '-password').then(function(users){
@@ -47,35 +50,52 @@ module.exports.getUser = function(req, res, next){
 
 module.exports.updateUser = function(req, res, next){
 	var query = { _id: req.decoded.id };
-	var file = req.file || null;
-	// var upadatedUser = req.body
-
-	console.log('file', file);
-	sharp('./' + file.path).resize(128, 128).toFile(file.destination + '/thumb-' + file.filename);
-
-	User.updateUser(query, {
-		"$set": {
-			profile_img: file.destination.substr(2) + '/thumb-' + file.filename
-		}
-	}).then(function(user){
-		if (!user){
+	uploadImage(req, res, function(err){
+		if (err){
 			var errors = [];
 			errors.push({
-				status: 404,
-				message: 'User not found'
+				status: 422,
+				message: err.message
 			});
-			res.status(404).json({
+			res.status(422).json({
 				errors: errors
 			});	
 		} else {
-			res.status(200).json({
-				status: 200,
-				user: user
-			});
+			var file = req.file || null;
+
+			// console.log('file', file);
+			if (file){
+				sharp('./' + file.path)
+					.resize(128, 128)
+					.toFile(file.destination + '/thumb-' + file.filename)
+					.then(function(){
+						User.updateUser(query, {
+							"$set": {
+								profile_img: file.destination.substr(2) + '/thumb-' + file.filename
+							}
+						}).then(function(user){
+							if (!user){
+								var errors = [];
+								errors.push({
+									status: 404,
+									message: 'User not found'
+								});
+								res.status(404).json({
+									errors: errors
+								});	
+							} else {
+								res.status(200).json({
+									status: 200,
+									user: user
+								});
+							}
+						}).catch(function(err){
+							next(err);
+						});
+					});
+			}
 		}
-	}).catch(function(err){
-		next(err);
-	})
+	});
 };
 
 module.exports.followUser = function(req, res, next){

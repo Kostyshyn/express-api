@@ -29,7 +29,7 @@ var userSchema = mongoose.Schema({
 	},
 	profile_img: {
 		type: String,
-		default: ''
+		default: 'public_images/128_profile_placeholder.png'
 	},
 	online: {
 		type: Boolean,

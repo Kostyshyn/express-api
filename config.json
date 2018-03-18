@@ -1,5 +1,5 @@
 {
-	"dbUrl": "mongodb://localhost/SPA_blog_v2",
+	"dbUrl": "mongodb://localhost/VueExpress",
 	"port": "8889",
 	"private": {
 		"access": {
@@ -14,7 +14,7 @@
 		"loadLimit" : 20
 	},
 	"upload": {
-		"maxFileSizeMb": 1
+		"maxFileSizeMb": 5
 	},
 	"errorMessages": {
 		"authentication": {
