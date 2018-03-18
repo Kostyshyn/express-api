@@ -1,7 +1,7 @@
 var User = require('../../models/User');
 var config = require('../../config');
 var Events = require('../../events');
-var sharp = require('sharp');
+// var sharp = require('sharp');
 var upload = require('../upload');
 var uploadImage = upload.upload.single('profile-image');
 var fs = require('fs');
@@ -65,10 +65,10 @@ module.exports.updateUser = function(req, res, next){
 
 			// console.log('file', file);
 			if (file){
-				sharp('./' + file.path)
-					.resize(128, 128)
-					.toFile(file.destination + '/thumb-' + file.filename)
-					.then(function(){
+				// sharp('./' + file.path)
+				// 	.resize(128, 128)
+				// 	.toFile(file.destination + '/thumb-' + file.filename)
+				// 	.then(function(){
 						User.updateUser(query, {
 							"$set": {
 								profile_img: file.destination.substr(2) + '/thumb-' + file.filename
@@ -92,7 +92,7 @@ module.exports.updateUser = function(req, res, next){
 						}).catch(function(err){
 							next(err);
 						});
-					});
+					// });
 			}
 		}
 	});

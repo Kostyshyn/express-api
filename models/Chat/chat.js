@@ -17,6 +17,10 @@ var chatSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Message'
     }],
+    newMessagesCount: {
+    	type: Number,
+    	default: 0
+    },
 	created: {
 		type: Date,
 		default: Date.now

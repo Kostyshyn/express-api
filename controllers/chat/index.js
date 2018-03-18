@@ -185,6 +185,7 @@ module.exports.sendMessage = function(req, res, next){
 								to: to,
 								type: 'message',
 								payload: {
+									chat: message.chat._id,
 									message: message.message,
 									meta: {
 										delivered: message.meta.delivered,
