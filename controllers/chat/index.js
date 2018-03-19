@@ -21,11 +21,11 @@ module.exports.getChats = function(req, res, next){
 	}).populate([
 		{
 			path: 'participant1',
-			select: 'username href profile_img'
+			select: 'username href profile_img online'
 		},
 		{
 			path: 'participant2',
-			select: 'username href profile_img'
+			select: 'username href profile_img online'
 		},
 		{
 			path: 'messages',

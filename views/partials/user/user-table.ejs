@@ -85,7 +85,7 @@
 						<%if (users[i].online) { %>
 							online
 						<% } else { %>
-							<%= moment(users[i].last_seen).fromNow() %>
+							<%= moment(users[i].last_seen).format('D.MM.YYYY/h:mm: a') %>
 						<% }; %>
 					</th>
 					<th>0</th>

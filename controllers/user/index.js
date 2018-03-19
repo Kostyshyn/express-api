@@ -1,13 +1,13 @@
 var User = require('../../models/User');
 var config = require('../../config');
 var Events = require('../../events');
-// var sharp = require('sharp');
+var sharp = require('sharp');
 var upload = require('../upload');
 var uploadImage = upload.upload.single('profile-image');
 var fs = require('fs');
 
 module.exports.getAllUsers = function(req, res, next){
-	User.allUsers(null, '-password').then(function(users){
+	User.allUsers(null, '-password -email').then(function(users){
 		if (users.length == 0){
 			res.status(204).json({
 				status: 204,
@@ -27,7 +27,7 @@ module.exports.getAllUsers = function(req, res, next){
 
 module.exports.getUser = function(req, res, next){
 	var query = { href: req.params.href };
-	User.readUser(query, '-password', 'followers').then(function(user){
+	User.readUser(query, '-password', 'followers follows').then(function(user){
 		if (!user){
 			var errors = [];
 			errors.push({
@@ -42,6 +42,46 @@ module.exports.getUser = function(req, res, next){
 				status: 200,
 				user: user
 			});
+		}
+	}).catch(function(err){
+		next(err);
+	})
+};
+
+module.exports.getUserRelations = function(req, res, next){
+	var query = { href: req.params.href };
+	User.readUser(query, '-password', 'followers follows').then(function(user){
+		if (!user){
+			var errors = [];
+			errors.push({
+				status: 404,
+				message: 'User not found'
+			});
+			res.status(404).json({
+				errors: errors
+			});	
+		} else {
+			User.allUsers({
+				'_id': {
+					$in: user.followers
+				}
+			}, '-password -email').then(function(followers){
+				User.allUsers({
+					'_id': {
+						$in: user.follows
+					}
+				}, '-password -email').then(function(follows){
+					res.status(200).json({
+						status: 200,
+						followers: followers,
+						follows: follows
+					});
+				}).catch(function(err){
+					next(err);
+				})
+			}).catch(function(err){
+				next(err);
+			})
 		}
 	}).catch(function(err){
 		next(err);
@@ -65,10 +105,10 @@ module.exports.updateUser = function(req, res, next){
 
 			// console.log('file', file);
 			if (file){
-				// sharp('./' + file.path)
-				// 	.resize(128, 128)
-				// 	.toFile(file.destination + '/thumb-' + file.filename)
-				// 	.then(function(){
+				sharp('./' + file.path)
+					.resize(128, 128)
+					.toFile(file.destination + '/thumb-' + file.filename)
+					.then(function(){
 						User.updateUser(query, {
 							"$set": {
 								profile_img: file.destination.substr(2) + '/thumb-' + file.filename
@@ -92,7 +132,7 @@ module.exports.updateUser = function(req, res, next){
 						}).catch(function(err){
 							next(err);
 						});
-					// });
+					});
 			}
 		}
 	});

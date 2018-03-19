@@ -11,6 +11,8 @@ router.get('/', userController.getAllUsers);
 router.use('/chat', chatRouter); // chat
 
 router.get('/:href', userController.getUser);
+router.get('/:href/relations', userController.getUserRelations);
+
 router.post('/:href/follow', authController.protected, userController.followUser);
 
 router.put('/:href', authController.protected, userController.updateUser); // edit
