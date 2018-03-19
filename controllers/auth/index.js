@@ -29,7 +29,7 @@ module.exports.register = function(req, res, next){
 			User.createUser(newUser).then(function(user){
 
 				var token = jwt.sign({ id: user._id }, config.private.secretAuthKey, {
-					expiresIn: 86400 // 24 hours
+					expiresIn: config.private.expires // 86400 // 24 hours
 				});
 
 				var responseUser = {
@@ -39,7 +39,9 @@ module.exports.register = function(req, res, next){
 					info: user.info,
 					profile_img: user.profile_img,
 					role: user.role,
-					id: user._id
+					id: user._id,
+					follows: user.follows,
+					followers: user.followers
 				};
 
 				res.status(200);
@@ -69,7 +71,7 @@ module.exports.login = function(req, res, next){
 			var errors = [];
 			errors.push({
 				status: 403,
-				message: 'User not found'
+				message: config.errorMessages.authentication.login.userNotFound
 			});
 			res.status(403);
 			res.json({
@@ -79,7 +81,7 @@ module.exports.login = function(req, res, next){
 			var errors = [];
 			errors.push({
 				status: 401,
-				message: 'Invalid password'
+				message: config.errorMessages.authentication.login.invalidPassword
 			});
 			res.status(401);
 			res.json({
@@ -87,7 +89,7 @@ module.exports.login = function(req, res, next){
 			});
 		} else {
 			var token = jwt.sign({ id: user._id }, config.private.secretAuthKey, {
-				expiresIn: 86400 // 24 hours
+				expiresIn: config.private.expires 
 			});
 
 			var responseUser = {
@@ -97,7 +99,9 @@ module.exports.login = function(req, res, next){
 				info: user.info,
 				profile_img: user.profile_img,
 				role: user.role,
-				id: user._id
+				id: user._id,
+				follows: user.follows,
+				followers: user.followers
 			};
 
 			res.status(200);
@@ -112,12 +116,11 @@ module.exports.login = function(req, res, next){
 
 module.exports.protected = function(req, res, next) {
  	var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
   	if (token) {
 
     	jwt.verify(token, config.private.secretAuthKey, function(err, decoded){      
       		if (err) {
-	        	return res.json({ success: false, message: 'Failed to authenticate token.' });    
+	        	res.status(401).json({ success: false, message: config.errorMessages.authentication.protected.tokenVerificationFailed });    
 	      	} else {
 	       		// if everything is good, save to request for use in other routes
 	        	req.decoded = decoded;    
@@ -126,12 +129,11 @@ module.exports.protected = function(req, res, next) {
     	});
 
   	} else {
-    	return res.status(403).json({
+    	res.status(403).json({
     		status: 403,
         	success: false, 
-        	message: 'No token provided' 
+        	message: config.errorMessages.authentication.protected.noToken 
     	});
-
   	}
 };
 

@@ -1,54 +1,20 @@
 var express = require('express');
 var router = express.Router();
-var expressJoi = require('express-joi-validator');
-var validator = require('../../../controllers/validators');
+var userController = require('../../../controllers/user');
+var authController = require('../../../controllers/auth');
+// var uploadController = require('../../../controllers/upload');
 
-// 
-// var userController = require('../../../controllers/user');
-// 
+var chatRouter = require('./chat');
 
-var User =  require('../../../models/User');
+router.get('/', userController.getAllUsers);
 
-router.get('/', function(req, res, next) {
+router.use('/chat', chatRouter); // chat
 
-	// console.log(req.user);
+router.get('/:href', userController.getUser);
+router.get('/:href/relations', userController.getUserRelations);
 
-	User.allUsers().then(function(users){
-		if (users){
-			res.status(200);
-			res.json({ users: users });
-		} else {
-			res.status(404);
-			res.json({
-				user: null,
-				message: 'Users not found'
-			});
-		}
-	}).catch(function(err){
-		next(err);
-	});
+router.post('/:href/follow', authController.protected, userController.followUser);
 
-});
-
-router.get('/:href', function(req, res, next) {
-
-	var query = { href: req.params.href };
-
-	User.readUser(query).then(function(user){
-		if (user){
-			res.status(200);
-			res.json({ user: user });
-		} else {
-			res.status(404);
-			res.json({
-				user: null,
-				message: 'User not found'
-			});
-		}
-	}).catch(function(err){
-		next(err);
-	});
-
-});
+router.put('/:href', authController.protected, userController.updateUser); // edit
 
 module.exports = router;

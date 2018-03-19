@@ -1,0 +1,106 @@
+<% layout('../../layout') %>
+<div class="container">
+	<h2 class="title"><%= title %></h2>
+	<div class="user-search-form">
+		<form method="get" action="/users">
+			<div class="columns">
+				<div class="column is-6">
+					<div class="field">
+			  			<label class="label">Username</label>
+			  			<div class="control has-icons-left has-icons-right">
+			    			<input class="input" type="text" placeholder="User" value="" name="username">
+			    			<span class="icon is-small is-left">
+			      				<i class="fas fa-user"></i>
+			    			</span>
+			  			</div>
+			  			<% if (errors) { %>
+							<p class="help is-danger">This username is available</p>
+			  			<% }; %>
+					</div>	
+				</div>
+				<div class="column is-6">
+				
+					<div class="field is-grouped">
+				  		<div class="control">
+				  			<label class="label">Options</label>
+				    		<div class="select">
+				      			<select name="options">
+									<option value="" disabled selected>Sort by</option>
+				        			<option value="posts">Posts</option>
+				        			<option value="comments">Comments</option>
+				        			<option value="likes">Likes</option>
+				        			<option value="followers">Followers</option>
+				        			<option value="follows">Follows</option>
+				        			<option value="created">Created</option>
+				      			</select>
+				    		</div>
+						</div>
+				  		<div class="control check-center">
+				    		<label class="checkbox">
+				      			<input type="checkbox" name="online">
+				     			Online
+				    		</label>
+			  			</div>
+			  			<div class="control">
+					    	<button class="button is-primary">Search</button>
+					  	</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="user-table">
+		<table class="table is-hoverable is-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Last seen</th>
+					<th>Posts</th>
+					<th>Comments</th>
+					<th>Likes</th>
+					<th>Followers</th>
+					<th>Follows</th>
+					<th>Created</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for (var i=0; i < users.length; i++) {%>
+				<tr>
+					<th><%= i + 1 %></th>
+					<th>
+					<!-- <th style="display: flex; justify-content: center;"> -->
+						<a href="/users/<%= users[i].href %>" class="user-link">
+							<div class="user-image sm"></div>
+							<%if (users[i].online) { %>
+								<span class="online-t"></span>
+							<% } else { %>
+								<span class="online-f"></span>
+							<% }; %>
+							<%= users[i].username %>
+						</a>
+					</th>
+					<th>
+						<%if (users[i].online) { %>
+							online
+						<% } else { %>
+							<%= moment(users[i].last_seen).format('D.MM.YYYY/h:mm: a') %>
+						<% }; %>
+					</th>
+					<th>0</th>
+					<th>0</th>
+					<th>0</th>
+					<th><%= users[i].followers.length %></th>
+					<th><%= users[i].follows.length %></th>
+					<th><%= moment(users[i].created).format('D.MM.YYYY') %></th> 
+					<!-- Do MMMM, YYYY -->
+				</tr>
+				<% }; %>
+			</tbody>
+			<tfoot>
+				
+			</tfoot>
+		</table>	
+	</div>
+</div>

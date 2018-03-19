@@ -1,12 +1,34 @@
 {
-	"dbUrl": "mongodb://localhost/SPA_blog_v2",
-	"port": "8888",
+	"dbUrl": "mongodb://localhost/VueExpress",
+	"port": "8889",
 	"private": {
 		"access": {
 			"admin": 2,
 			"moderator": 1,
 			"user": 0
 		},
-		"secretAuthKey": "secret"
+		"secretAuthKey": "secret",
+		"expires": 86400
+	},
+	"chat": {
+		"loadLimit" : 20
+	},
+	"upload": {
+		"maxFileSizeMb": 10
+	},
+	"errorMessages": {
+		"authentication": {
+			"login": {
+				"userNotFound": "Такого користувача не знайдено",
+				"invalidPassword": "Неправильний пароль"
+			},
+			"register": {
+				"alreadyExists": "Користувач з таким ім'ям або адресою вже існує"
+			},
+			"protected": {
+				"tokenVerificationFailed": "Неправильний токен",
+				"noToken": "Немає токена"
+			}
+		}
 	}
 }

@@ -9,6 +9,7 @@ var debug = require('debug')('express-api:server');
 var http = require('http');
 var config = require('../config');
 var socketIo = require('socket.io');
+var os = require('os');
 
 /**
  * Get port from environment and store in Express.
@@ -29,6 +30,8 @@ require('../socket')(io, null);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+// var host = os.networkInterfaces().wlan0[0].address;
 
 server.listen(port);
 server.on('error', onError);
