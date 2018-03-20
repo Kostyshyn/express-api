@@ -72,7 +72,7 @@
 					<th>
 					<!-- <th style="display: flex; justify-content: center;"> -->
 						<a href="/users/<%= users[i].href %>" class="user-link">
-							<div class="user-image sm"></div>
+						<img src="<%= users[i].profile_img %>" alt="profile-image" class="user-image sm">
 							<%if (users[i].online) { %>
 								<span class="online-t"></span>
 							<% } else { %>
