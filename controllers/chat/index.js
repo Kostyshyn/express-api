@@ -73,7 +73,7 @@ module.exports.openChat = function(req, res, next){
 						errors: errors
 					});	
 				} else {
-					if (participant1.id == participant2.id){
+					if (participant1.id === participant2.id){
 						var errors = [];
 						errors.push({
 							status: 404,
@@ -122,8 +122,8 @@ module.exports.openChat = function(req, res, next){
 									participant1: participant1,
 									participant2: participant2
 								}).then(function(chat){
-									res.status(200).json({
-										status: 200,
+									res.status(201).json({
+										status: 201,
 										chat: chat,
 										new: true
 									});

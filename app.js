@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var colors = require('colors');
 var cors = require('cors');
+var helmet = require('helmet');
+var compression = require('compression');
+
 var config = require('./config');
 
 var index = require('./routes/index');
@@ -33,6 +36,10 @@ db.once('connected', function(){
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+app.use(compression());
+app.use(helmet());
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

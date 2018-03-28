@@ -165,7 +165,7 @@ module.exports.followUser = function(req, res, next){
 						errors: errors
 					});	
 				} else {
-					if (follower.id == follows.id){
+					if (follower.id === follows.id){
 
 						var errors = [];
 						errors.push({
@@ -246,7 +246,7 @@ module.exports.followUser = function(req, res, next){
 function isFollow(followers, follows){ // array of followers and follows object
 	var found = false;
 	for (var i = 0; i < followers.length; i++){
-		if (followers[i]._id.toString() == follows._id.toString()){
+		if (followers[i]._id.toString() === follows._id.toString()){
 			found = true;
 			break;
 		}
