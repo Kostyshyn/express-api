@@ -11,7 +11,7 @@
 		"expires": 86400
 	},
 	"chat": {
-		"loadLimit" : 20
+		"loadLimit" : 35
 	},
 	"upload": {
 		"maxFileSizeMb": 10
