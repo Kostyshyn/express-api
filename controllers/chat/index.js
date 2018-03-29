@@ -1,6 +1,7 @@
 var User = require('../../models/User');
 var Chat = require('../../models/Chat/chat.js');
 var Message = require('../../models/Chat/message.js');
+var striptags = require('striptags');
 
 var config = require('../../config');
 var Events = require('../../events');
@@ -149,7 +150,7 @@ module.exports.openChat = function(req, res, next){
 
 module.exports.sendMessage = function(req, res, next){
 	var participant1 = req.decoded.id;
-	var messageText = req.body.message;
+	var messageText = striptags(req.body.message);
 	var created = req.body.created;
 	var chatId = req.body.chat;
 
