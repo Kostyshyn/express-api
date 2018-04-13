@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var config = require('../../config');
 
 var Schema = mongoose.Schema;
 var User = require('../User');
@@ -10,6 +11,10 @@ var messageSchema = mongoose.Schema({
         ref : 'Chat'
 	},
     message : String,
+    classify: {
+        type: Number,
+        default: config.chat.messageType.text
+    },
     meta : {
         user : {
             type : mongoose.Schema.Types.ObjectId,

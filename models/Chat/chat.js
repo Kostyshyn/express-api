@@ -5,14 +5,10 @@ var User = require('../User');
 var Message = require('./message.js');
 
 var chatSchema = mongoose.Schema({
-	participant1: {                
+	participants: [{                
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
-    },
-  	participant2: {                
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
-    },
+    }],
     messages: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Message'
@@ -20,6 +16,14 @@ var chatSchema = mongoose.Schema({
     newMessagesCount: {
     	type: Number,
     	default: 0
+    },
+    lastMessageTime: {
+		type: Date,
+		default: Date.now
+    },
+    group: {
+    	type: Boolean,
+    	default: false
     },
 	created: {
 		type: Date,

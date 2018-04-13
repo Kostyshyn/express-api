@@ -10,22 +10,11 @@ module.exports.getChats = function(req, res, next){
 	var userId = req.decoded.id;
 
 	Chat.find({
-		'$or': [
-			{
-				participant1: userId
-			},
-			{
-				participant2: userId
-			}
-		],
-		'messages.0': { '$exists': true } 
+		'participants._id': userId
+		// 'messages.0': { '$exists': true } 
 	}).populate([
 		{
-			path: 'participant1',
-			select: 'username href profile_img online'
-		},
-		{
-			path: 'participant2',
+			path: 'participants',
 			select: 'username href profile_img online'
 		},
 		{
